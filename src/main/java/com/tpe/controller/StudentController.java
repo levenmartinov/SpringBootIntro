@@ -103,6 +103,13 @@ public class StudentController {
     //ÖDEV:(Alternatif)6-path param ile id si verilen öğrenciyi getirme
     //request: http://localhost:8080/students/1 + GET
     //response : student + 200
+    @GetMapping
+    public ResponseEntity<Student> pathStudent(@RequestPart("id") Long id) {
+
+        Student foundStudent = service.getStudentById(id);
+        return new ResponseEntity<>(foundStudent, HttpStatus.OK);
+
+    }
 
 
 
