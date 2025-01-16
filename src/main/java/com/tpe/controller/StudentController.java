@@ -2,6 +2,7 @@ package com.tpe.controller;
 
 import com.tpe.domain.Student;
 
+import com.tpe.dto.StudentDTO;
 import com.tpe.dto.UpdateStudentDTO;
 import com.tpe.exception.ResourceNotFoundException;
 import com.tpe.service.StudentService;
@@ -117,7 +118,8 @@ public class StudentController {
     //request : http://localhost:8080/students/1 + PUT(yerine koyma)/PATCH(kismi) + BODY(JSON)
     //response : güncelleme, başarılı mesaj + 201
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody UpdateStudentDTO studentDTO) {
+    public ResponseEntity<String> updateStudent(@PathVariable("id") Long id,
+                                                @Valid @RequestBody UpdateStudentDTO studentDTO) {
 
         service.updateStudent(id, studentDTO);
 
@@ -140,7 +142,7 @@ public class StudentController {
     public ResponseEntity<Page<Student>> getAllStudents(@RequestParam("page") int pageNo, //kacinci sayfa
                                                         @RequestParam("size") int size,   //her sayfada kac tane kayit
                                                         @RequestParam("sort") String property, //hangi ozellige gore siralama
-                                                        @RequestParam("direction") Sort.Direction direction){ //siralamanin yonu icin sabit degisken
+                                                        @RequestParam("direction") Sort.Direction direction) { //siralamanin yonu icin sabit degisken
 
         //findAll metodunun sayfa getirmesi için gerekli olan bilgileri
         //pageable tipinde verebiliriz.
@@ -150,11 +152,40 @@ public class StudentController {
 
         return new ResponseEntity<>(studentPage, HttpStatus.OK);//200
 
+    }
+
+    //14- grade ile öğrencileri filtreleyelim
+    //request : http://localhost:8080/students/grade/100 + GET
+    //response : grade = 100 olan ogrencileri listeleyelim + 200
+    @GetMapping("/grade/{grade}")
+    public ResponseEntity<List<Student>> getAllStudentsByGrade(@PathVariable("grade") Integer grade) {
+
+        List<Student> studentList = service.getStudentsByeGrade(grade);
+        return ResponseEntity.ok(studentList);
+    }
 
 
+    //ÖDEVVV:
+    //JPA in metodlarını türetme
+    //JPQL/SQL ile custom sorgu
+    //16-lastname ile öğrencileri filtreleyelim
+    // request:http://localhost:8080/students/lastname?lastname=Potter + GET
+    //response : lastname e sahip olan öğrenci listesi + 200
+
+    //Meraklısına ÖDEVVV:)isim veya soyisme göre filtreleme
+    //request:http://localhost:8080/students/search?word=harry + GET
 
 
+    //17- id'si verilen öğrencinin name,lastname ve grade getirme
+    //request:http://localhost:8080/students/info/2 + GET
+    //response:id'si verilen öğrencinin sadece 3 datasını(field) DTO ile getirelim +200
+    @GetMapping("/info/{id}")
+    public ResponseEntity<StudentDTO> getStudentInfo(@PathVariable Long id) {
 
+        //StudentDTO studentDTO = service.getStudentByIdDto(id); //18-
+        StudentDTO studentDTO = service.getStudentInfoByDTO(id); //18-b
+
+        return ResponseEntity.ok(studentDTO);
     }
 
 
@@ -168,7 +199,32 @@ public class StudentController {
 
 
 
+
+
+
+
+
+
+
     //Not:http://localhost:8080/students/update?name=Ali&lastname=Can&email=ali@mail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

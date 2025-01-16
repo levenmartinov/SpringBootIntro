@@ -1,6 +1,7 @@
 package com.tpe.service;
 
 import com.tpe.domain.Student;
+import com.tpe.dto.StudentDTO;
 import com.tpe.dto.UpdateStudentDTO;
 import com.tpe.exception.ConflictException;
 import com.tpe.exception.ResourceNotFoundException;
@@ -84,7 +85,7 @@ public class StudentService {
             throw new ConflictException("Email already exists!!!");
         }
 
-
+        //Entity <-- DTO
         foundStudent.setName(studentDTO.getName());
         foundStudent.setLastname(studentDTO.getLastname());
         foundStudent.setEmail(studentDTO.getEmail());
@@ -102,4 +103,66 @@ public class StudentService {
 
 
     }
+
+
+    //15-
+    public List<Student> getStudentsByeGrade(Integer grade) {
+
+        //select * from Student where grade = 100
+        //return repository.findAllByGrade(grade);
+
+        return repository.filterStudentsByGrade(grade);
+
+
+    }
+
+
+    //18-Id'si verilen student i getirelim
+
+    public StudentDTO getStudentByIdDto(Long id) {
+
+        Student student = getStudentById(id);
+
+        //Entity --> DTO
+        //tablodan geln entitynin icindeki 3 datayi alip
+        //DTO objesi icine yerlestirdik
+
+        //StudentDTO studentDTO = new StudentDTO(student.getName(), student.getLastname(), student.getGrade());
+        //  StudentDTO studentDTO=new StudentDTO();
+        // studentDTO.setName(student.getName());....
+
+        //yukarıdaki 2 seçenek zahmetli, bunun yerine DTO oluşturmak için
+        // constructorın parametresine Entity objesi verip dönüşümü sağlayabiliriz
+
+
+        StudentDTO studentDTO = new StudentDTO(student);
+
+        return studentDTO;
+
+    }
+
+
+    //18-b:repositoryden doğrudan DTO objesi getirelim
+    public StudentDTO getStudentInfoByDTO(Long id) {
+        StudentDTO studentDTO = repository.findStudentDtoById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Student is not found by id: " + id));
+        return studentDTO;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
