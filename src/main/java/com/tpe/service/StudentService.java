@@ -1,12 +1,16 @@
 package com.tpe.service;
 
 import com.tpe.domain.Student;
+import com.tpe.dto.UpdateStudentDTO;
 import com.tpe.exception.ConflictException;
 import com.tpe.exception.ResourceNotFoundException;
 import com.tpe.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -60,23 +64,42 @@ public class StudentService {
     }
 
 
+    //11- id'si verilen ogrencinin bilgilerini dto'da gelen bilgiler ile degistirelim
+    public void updateStudent(Long id, UpdateStudentDTO studentDTO) {
 
 
+        Student foundStudent = getStudentById(id);//1,Jack,Sparrow,jack@mail.com,98,13.01...
+
+        //emailin unique olmasına engel var mı?
+        //DTOdan gelen yeni email            tablodaki emailler
+        //1-xxx@mail.com                     YOK V (existsByEmail:false)  -->update
+        //2-harry@mail.com                   başka bir öğrenciye ait X (existsByEmail:true) -->ConflictException
+        //3-jack@mail.com                    kendisine ait V (existsByEmail:true) -->bu bir çakışma değil
+
+        //istek ile gönderilen email tabloda var mı?
+        boolean existEmail = repository.existsByEmail(studentDTO.getEmail());//T:kendisinin veya başkasının
+        boolean selfEmail = foundStudent.getEmail().equals(studentDTO.getEmail());//T:kendisine ait
+        if (existEmail && !selfEmail) {
+            //çakışma var
+            throw new ConflictException("Email already exists!!!");
+        }
 
 
+        foundStudent.setName(studentDTO.getName());
+        foundStudent.setLastname(studentDTO.getLastname());
+        foundStudent.setEmail(studentDTO.getEmail());
+
+        repository.save(foundStudent);//saveOrUpdate
 
 
+    }
+
+    //13-gerekli parametreleri(bilgileri) pageable ile vererek tum ogrencilerin sayfalamasini talep edilen sayfanin dondurulmesini saglayalim
+    public Page<Student> getAllStudentsByPage(Pageable pageable) {
+
+        Page<Student> studentPage = repository.findAll(pageable);
+        return studentPage;
 
 
-
-
-
-
-
-
-
-
-
-
-
+    }
 }

@@ -2,6 +2,7 @@ package com.tpe.controller;
 
 import com.tpe.domain.Student;
 
+import com.tpe.dto.UpdateStudentDTO;
 import com.tpe.exception.ResourceNotFoundException;
 import com.tpe.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -116,12 +117,44 @@ public class StudentController {
     //request : http://localhost:8080/students/1 + PUT(yerine koyma)/PATCH(kismi) + BODY(JSON)
     //response : güncelleme, başarılı mesaj + 201
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody Student student) {
+    public ResponseEntity<String> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody UpdateStudentDTO studentDTO) {
 
-
+        service.updateStudent(id, studentDTO);
 
 
         return new ResponseEntity<>("Student is updated successfully...", HttpStatus.CREATED); //201
+    }
+
+
+    //12-tüm öğrencileri listeleme : READ
+    //pagination(sayfalandırma) : hız/performans
+    //tüm kayıtları page page(sayfa sayfa) gösterelim
+
+    //request :
+    //http://localhost:8080/students/page?
+    //                               page=3&
+    //                               size=20&
+    //                               sort=name&
+    //                               direction=DESC(ASC) + GET
+    @GetMapping("/page")
+    public ResponseEntity<Page<Student>> getAllStudents(@RequestParam("page") int pageNo, //kacinci sayfa
+                                                        @RequestParam("size") int size,   //her sayfada kac tane kayit
+                                                        @RequestParam("sort") String property, //hangi ozellige gore siralama
+                                                        @RequestParam("direction") Sort.Direction direction){ //siralamanin yonu icin sabit degisken
+
+        //findAll metodunun sayfa getirmesi için gerekli olan bilgileri
+        //pageable tipinde verebiliriz.
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by(direction, property));
+
+        Page<Student> studentPage = service.getAllStudentsByPage(pageable);
+
+        return new ResponseEntity<>(studentPage, HttpStatus.OK);//200
+
+
+
+
+
+
     }
 
 
@@ -130,16 +163,12 @@ public class StudentController {
 
 
 
+
+
+
+
+
     //Not:http://localhost:8080/students/update?name=Ali&lastname=Can&email=ali@mail.com
-
-
-
-
-
-
-
-
-
 
 
 }
