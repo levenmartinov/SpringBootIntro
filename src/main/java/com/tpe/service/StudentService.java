@@ -44,4 +44,39 @@ public class StudentService {
         return student;
 
     }
+
+    //9-
+    public void deleteStudentById(Long id) {
+
+        //id'si verilen student yoksa ozel bir mesaj ile custom exception firiltmak istiyoruz
+
+        // getStudentById(id);
+        // repository.deleteById(id);
+
+        //bu id ile ogrenci var mi?
+        Student student = getStudentById(id);
+        repository.delete(student);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
