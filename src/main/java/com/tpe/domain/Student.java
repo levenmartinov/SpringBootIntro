@@ -8,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter//tum filedlar icin getter metodunun tanimlamasini saglar
 @Setter//tum filedlar icin setter metodunun tanimlamasini saglar
@@ -55,6 +57,9 @@ public class Student {
     private LocalDateTime createDate = LocalDateTime.now();
 
     //getter & setter
+
+    @OneToMany(mappedBy = "student")
+    private List<Book> bookList=new ArrayList<>();
 
 
 }

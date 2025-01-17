@@ -150,19 +150,25 @@ public class StudentService {
     }
 
 
+    //ÖDEV:16
+    public List<Student> getAllStudentByLastname(String lastName) {
+
+        return repository.findAllByLastnameIgnoreCase(lastName);
+
+    }
+
+    //meraklısına:)
+    public List<Student> getAllStudentByNameOrLastname(String word) {
+        return repository.findByNameOrLastname(word, word);
+
+    }
 
 
+    //---------------------------------------------------------------------------------------------------------------------
+    public List<Student> getStudentsSearching(String word) {
 
-
-
-
-
-
-
-
-
-
-
-
-
+        //return repository.findByNameContains(word);
+        word = "%" + word + "%";
+        return repository.findByNameLike(word);
+    }
 }

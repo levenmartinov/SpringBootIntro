@@ -47,4 +47,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT new com.tpe.dto.StudentDTO(s) FROM Student s WHERE s.id=:pId")
     Optional<StudentDTO> findStudentDtoById(@Param("pId") Long id);
 
+    //ÖDEV:16
+    List<Student> findAllByLastnameIgnoreCase(String lastName);
+
+
+    //select * from Student where name=:pWord OR lastname=:pword1
+    List<Student> findByNameOrLastname(String word, String word1);
+
+
+    @Query("FROM Student s WHERE s.name LIKE :word")
+    List<Student> findByNameLike(@Param("word") String word);
 }
