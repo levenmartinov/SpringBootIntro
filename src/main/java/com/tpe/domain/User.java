@@ -33,6 +33,8 @@ public class User {
 
     //SSecurity(AuthProvider) userı getirdiğinde
     //rolleri de gelmeli ki Yetkisini kontrol edebilsin!!!
+    // userın yetki kontrolü için rollerini alması gerekli
+    //bu yüzden user getirirken rollerini de DB den getir
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
