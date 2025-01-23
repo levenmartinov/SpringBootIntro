@@ -31,7 +31,9 @@ public class User {
     @Column(nullable = false, length = 255)  //password DB ye kaydedilmeden önce şifrelenecek
     private String password;
 
-    @ManyToMany
+    //SSecurity(AuthProvider) userı getirdiğinde
+    //rolleri de gelmeli ki Yetkisini kontrol edebilsin!!!
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
 }

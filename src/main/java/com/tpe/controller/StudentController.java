@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +60,8 @@ public class StudentController {
     //1-tüm öğrencileri listeleyelim : READ
     //Request : http://localhost:8080/students + GET
     //Response: tüm öğrencilerin listesini + 200 : OK(HttpStatus Code)
+
+    @PreAuthorize("hasRole('STUDENT')") //metodu kullanmadan önce yetki kontrolü yapmayı sağlar
     @GetMapping
     //@ResponseBody:@Restcontroller içinde var, burada gerek kalmadı.
     public ResponseEntity<List<Student>> getAllStudents() {
@@ -104,10 +107,11 @@ public class StudentController {
     //6-query param ile id si verilen öğrenciyi getirme
     //request : http://localhost:8080/students/query?id=1 + GET
     //response:student + 200
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/query")
-    public ResponseEntity<Student> getStudent(@RequestParam("id") Long id) {
-        Student foundstudent = service.getStudentById(id);
-        return new ResponseEntity<>(foundstudent, HttpStatus.OK);
+    public ResponseEntity<Student> getStudent(@RequestParam("id") Long id){
+        Student foundstudent=service.getStudentById(id);
+        return new ResponseEntity<>(foundstudent,HttpStatus.OK);
     }
 
 

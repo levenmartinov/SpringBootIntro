@@ -1,4 +1,4 @@
-package com.tpe.service;
+package com.tpe.security;
 
 import com.tpe.domain.Role;
 import com.tpe.domain.User;
